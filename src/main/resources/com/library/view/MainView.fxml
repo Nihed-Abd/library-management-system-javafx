@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.library.controller.MainController"
+            prefHeight="700.0" prefWidth="1000.0">
+    
+    <top>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="15" bottom="15" left="15" right="15"/>
+            </padding>
+            
+            <HBox alignment="CENTER">
+                <Label styleClass="title" text="Library Management System"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="Libraries" onAction="#showBiblioPage" prefWidth="120"/>
+                <Button text="Books" onAction="#showAllBooksPage" prefWidth="120"/>
+                <Button text="History" onAction="#showAllHistoryPage" prefWidth="120"/>
+            </HBox>
+        </VBox>
+    </top>
+    
+    <center>
+        <StackPane fx:id="contentPane">
+            <!-- Content will be loaded here -->
+        </StackPane>
+    </center>
+    
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 10;">
+            <Label text="© 2025 Library Management System"/>
+        </HBox>
+    </bottom>
+    
+</BorderPane>

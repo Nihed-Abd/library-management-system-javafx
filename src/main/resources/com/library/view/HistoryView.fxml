@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.library.controller.HistoryController"
+      spacing="15" fx:id="historyPage">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label styleClass="subtitle" text="Loan/Return History"/>
+        
+        <Region HBox.hgrow="ALWAYS" />
+        
+        <ComboBox fx:id="filterComboBox" promptText="Filter by..." prefWidth="150" />
+        <ComboBox fx:id="biblioComboBox" promptText="Select Library..." prefWidth="180" />
+        <ComboBox fx:id="bookComboBox" promptText="Select Book..." prefWidth="180" />
+        
+        <Button text="Clear Filters" onAction="#clearFilters">
+            <graphic>
+                <ImageView fitHeight="16" fitWidth="16">
+                    <Image url="@../images/clear_icon.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
+    
+    <TableView fx:id="historyTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+            <TableColumn fx:id="dateTimeColumn" text="Date/Time" prefWidth="150" />
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100" />
+            <TableColumn fx:id="bookColumn" text="Book" prefWidth="150" />
+            <TableColumn fx:id="biblioColumn" text="Library" prefWidth="150" />
+            <TableColumn fx:id="noteColumn" text="Note" prefWidth="230" />
+            <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="100" />
+        </columns>
+    </TableView>
+    
+</VBox>

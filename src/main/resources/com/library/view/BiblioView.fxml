@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.library.controller.BiblioController"
+      spacing="15" fx:id="biblioPage">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label styleClass="subtitle" text="Libraries"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Add New Library" styleClass="button-add" onAction="#showAddBiblioDialog">
+            <graphic>
+                <ImageView fitHeight="16" fitWidth="16">
+                    <Image url="@../images/add_icon.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
+    
+    <TableView fx:id="biblioTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="150" />
+            <TableColumn fx:id="locationColumn" text="Location" prefWidth="150" />
+            <TableColumn fx:id="dateCreationColumn" text="Date Created" prefWidth="120" />
+            <TableColumn fx:id="descriptionColumn" text="Description" prefWidth="250" />
+            <TableColumn fx:id="bookCountColumn" text="Books" prefWidth="80" />
+            <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="180" />
+        </columns>
+    </TableView>
+    
+</VBox>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.library.controller.BookDialogController"
+          vgap="10" hgap="10" styleClass="dialog-pane">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <columnConstraints>
+        <ColumnConstraints minWidth="100" prefWidth="120" />
+        <ColumnConstraints minWidth="200" prefWidth="300" />
+    </columnConstraints>
+    
+    <!-- Book Code -->
+    <Label text="Book Code:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+    <TextField fx:id="nameField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+    
+    <!-- Title -->
+    <Label text="Title:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+    <TextField fx:id="titleField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    
+    <!-- Author -->
+    <Label text="Author:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+    <TextField fx:id="authorField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+    
+    <!-- Price -->
+    <Label text="Price:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+    <TextField fx:id="priceField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+    
+    <!-- Library Selection (when adding a book from all books view) -->
+    <Label fx:id="biblioLabel" text="Library:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+    <ComboBox fx:id="biblioComboBox" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+    
+    <!-- Description -->
+    <Label text="Description:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+    <TextArea fx:id="descriptionArea" GridPane.rowIndex="5" GridPane.columnIndex="1" 
+              prefRowCount="4" wrapText="true" />
+    
+    <!-- Preview section -->
+    <VBox spacing="10" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2" 
+          styleClass="card">
+        <Label text="Preview" styleClass="subtitle" />
+        <HBox spacing="5">
+            <Label text="Title:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewTitle" />
+        </HBox>
+        <HBox spacing="5">
+            <Label text="Author:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewAuthor" />
+        </HBox>
+        <HBox spacing="5">
+            <Label text="Book Code:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewName" />
+        </HBox>
+        <HBox spacing="5">
+            <Label text="Price:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewPrice" />
+        </HBox>
+        <HBox spacing="5">
+            <Label text="Description:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewDescription" wrapText="true" />
+        </HBox>
+    </VBox>
+    
+    <!-- Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT" 
+          GridPane.rowIndex="7" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <Button fx:id="saveButton" text="Save" onAction="#handleSave" defaultButton="true" />
+        <Button text="Cancel" onAction="#handleCancel" cancelButton="true" />
+    </HBox>
+    
+</GridPane>

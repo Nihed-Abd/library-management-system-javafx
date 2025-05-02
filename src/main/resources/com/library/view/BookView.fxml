@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.library.controller.BookController"
+      spacing="15" fx:id="booksPage">
+    
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15"/>
+    </padding>
+    
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label styleClass="subtitle" fx:id="biblioNameLabel" text="Books"/>
+        
+        <Region HBox.hgrow="ALWAYS" />
+        
+        <Button text="Back to Libraries" onAction="#backToBiblios">
+            <graphic>
+                <ImageView fitHeight="16" fitWidth="16">
+                    <Image url="@../images/back_icon.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+        
+        <Button text="Add New Book" styleClass="button-add" onAction="#showAddBookDialog">
+            <graphic>
+                <ImageView fitHeight="16" fitWidth="16">
+                    <Image url="@../images/add_icon.png" />
+                </ImageView>
+            </graphic>
+        </Button>
+    </HBox>
+    
+    <VBox styleClass="card" spacing="10">
+        <HBox spacing="10">
+            <Label text="Library Details:" style="-fx-font-weight: bold"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label text="Name:" style="-fx-font-weight: bold"/>
+            <Label fx:id="detailsNameLabel"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label text="Location:" style="-fx-font-weight: bold"/>
+            <Label fx:id="detailsLocationLabel"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label text="Description:" style="-fx-font-weight: bold"/>
+            <Label fx:id="detailsDescriptionLabel" wrapText="true"/>
+        </HBox>
+    </VBox>
+    
+    <TableView fx:id="bookTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="idColumn" text="ID" prefWidth="50" />
+            <TableColumn fx:id="nameColumn" text="Book Code" prefWidth="100" />
+            <TableColumn fx:id="titleColumn" text="Title" prefWidth="150" />
+            <TableColumn fx:id="authorColumn" text="Author" prefWidth="120" />
+            <TableColumn fx:id="priceColumn" text="Price" prefWidth="80" />
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="80" />
+            <TableColumn fx:id="dateCreationColumn" text="Date Added" prefWidth="100" />
+            <TableColumn fx:id="actionsColumn" text="Actions" prefWidth="200" />
+        </columns>
+    </TableView>
+    
+</VBox>
