@@ -124,16 +124,16 @@ public class HistoryController implements Initializable {
                     if (item == null || empty) {
                         setText(null);
                         setStyle("");
-                        getStyleClass().removeAll("loaned-status", "available-status");
+                        getStyleClass().removeAll("available-status", "loaned-status");
                     } else {
                         setText(item);
-                        getStyleClass().removeAll("loaned-status", "available-status");
+                        getStyleClass().removeAll("available-status", "loaned-status");
                         
                         // Apply appropriate style class based on type
-                        if ("Loan".equals(item)) {
-                            getStyleClass().add("loaned-status");
-                        } else {
+                        if ("Return".equals(item)) {
                             getStyleClass().add("available-status");
+                        } else {
+                            getStyleClass().add("loaned-status");
                         }
                     }
                 }
@@ -145,22 +145,28 @@ public class HistoryController implements Initializable {
         
         noteColumn.setCellValueFactory(new PropertyValueFactory<>("note"));
         
-        // Only show owner column for admin when viewing all history
-        if (showAllHistory && UserService.isAdmin()) {
-            ownerColumn.setVisible(true);
+        // Make the note column wider to show more text
+        noteColumn.setPrefWidth(200);
+        
+        // Only show the owner column for all history view
+        if (ownerColumn != null) {
             ownerColumn.setCellValueFactory(cellData -> {
                 History history = cellData.getValue();
-                String ownerName = "Unknown";
-                if (history.getBook() != null && 
-                    history.getBook().getBiblio() != null &&
-                    history.getBook().getBiblio().getUser() != null) {
-                    ownerName = history.getBook().getBiblio().getUser().getUsername();
-                }
+                String ownerName = history.getBook() != null && history.getBook().getBiblio() != null && 
+                                  history.getBook().getBiblio().getUser() != null ? 
+                    history.getBook().getBiblio().getUser().getUsername() : "Unknown";
                 return new SimpleStringProperty(ownerName);
             });
-        } else {
-            ownerColumn.setVisible(false);
+            
+            // Hide the owner column if not admin or not showing all history
+            ownerColumn.setVisible(UserService.isAdmin() && showAllHistory);
         }
+
+        // Enable row selection
+        historyTableView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        
+        // Make the table resizable and fill available space
+        historyTableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
     
     private void setupFiltering() {

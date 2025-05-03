@@ -465,6 +465,37 @@
     text-align: left;
 }
 
+/* Fix for selected rows to have black text on blue background */
+.table-view:focused .table-row-cell:filled:focused:selected {
+    -fx-background-color: #4285f4;
+    background-color: #4285f4;
+    -fx-text-fill: black;
+    color: black;
+}
+
+.table-view .table-row-cell:filled:selected {
+    -fx-background-color: #4285f4;
+    background-color: #4285f4;
+}
+
+.table-view .table-row-cell:filled:selected .table-cell {
+    -fx-text-fill: black;
+    color: black;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: #e8f5fe;
+    background-color: #e8f5fe;
+}
+
+/* Make tables fill available space */
+.table-view-wrapper {
+    -fx-alignment: center;
+    -fx-fill-width: true;
+    text-align: center;
+    width: 100%;
+}
+
 /* Button styling for actions */
 .action-button {
     -fx-background-color: #2196f3;
@@ -613,12 +644,4 @@
 .table-view .table-row-cell:hover {
     -fx-background-color: #e8f5fe;
     background-color: #e8f5fe;
-}
-
-/* Make tables fill available space */
-.table-view-wrapper {
-    -fx-alignment: center;
-    -fx-fill-width: true;
-    text-align: center;
-    width: 100%;
 }
