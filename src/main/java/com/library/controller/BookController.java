@@ -14,6 +14,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -260,7 +261,7 @@ public class BookController implements Initializable {
             private final Button deleteButton = new Button("Delete");
             private final Button loanButton = new Button("Loan");
             private final Button returnButton = new Button("Return");
-            private final HBox buttonContainer = new HBox(5);
+            private final HBox buttonContainer = new HBox(8); // Increased spacing between buttons
             
             {
                 // Configure buttons
@@ -269,6 +270,15 @@ public class BookController implements Initializable {
                 deleteButton.getStyleClass().add("delete-button");
                 loanButton.getStyleClass().add("loan-button");
                 returnButton.getStyleClass().add("return-button");
+                
+                // Set button icons or text
+                viewButton.setPrefWidth(80);
+                editButton.setPrefWidth(80);
+                deleteButton.setPrefWidth(80);
+                loanButton.setPrefWidth(80);
+                returnButton.setPrefWidth(80);
+                
+                buttonContainer.setAlignment(Pos.CENTER);
                 
                 loanButton.setOnAction(event -> {
                     Book book = getTableRow().getItem();

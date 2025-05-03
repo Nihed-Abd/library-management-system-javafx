@@ -74,7 +74,7 @@ public class BookDAO {
     }
 
     public boolean addBook(Book book) {
-        String query = "INSERT INTO book (name, biblio_id, is_available, title, author, description, price, date_creation) " +
+        String query = "INSERT INTO book (name, biblio_id, available, title, author, description, price, date_creation) " +
                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = DatabaseUtil.getConnection();
@@ -107,7 +107,7 @@ public class BookDAO {
     }
 
     public boolean updateBook(Book book) {
-        String query = "UPDATE book SET name = ?, biblio_id = ?, is_available = ?, title = ?, " +
+        String query = "UPDATE book SET name = ?, biblio_id = ?, available = ?, title = ?, " +
                       "author = ?, description = ?, price = ?, date_creation = ? WHERE id = ?";
         
         try (Connection conn = DatabaseUtil.getConnection();
@@ -149,7 +149,7 @@ public class BookDAO {
     
     public boolean loanBook(int bookId) {
         // First, update the book's available status
-        String updateQuery = "UPDATE book SET is_available = FALSE WHERE id = ?";
+        String updateQuery = "UPDATE book SET available = FALSE WHERE id = ?";
         
         try (Connection conn = DatabaseUtil.getConnection()) {
             conn.setAutoCommit(false);
@@ -180,7 +180,7 @@ public class BookDAO {
     
     public boolean returnBook(int bookId) {
         // First, update the book's available status
-        String updateQuery = "UPDATE book SET is_available = TRUE WHERE id = ?";
+        String updateQuery = "UPDATE book SET available = TRUE WHERE id = ?";
         
         try (Connection conn = DatabaseUtil.getConnection()) {
             conn.setAutoCommit(false);
@@ -214,7 +214,7 @@ public class BookDAO {
         book.setId(rs.getInt("id"));
         book.setName(rs.getString("name"));
         book.setBiblioId(rs.getInt("biblio_id"));
-        book.setAvailable(rs.getBoolean("is_available"));
+        book.setAvailable(rs.getBoolean("available"));
         book.setTitle(rs.getString("title"));
         book.setAuthor(rs.getString("author"));
         book.setDescription(rs.getString("description"));
