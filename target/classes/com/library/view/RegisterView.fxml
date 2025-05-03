@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.library.controller.RegisterController"
+            prefHeight="500.0" prefWidth="600.0"
+            styleClass="login-pane">
+    
+    <top>
+        <VBox alignment="CENTER" spacing="20" styleClass="header">
+            <padding>
+                <Insets top="30" bottom="20"/>
+            </padding>
+            <Label text="Library Management System" styleClass="title"/>
+            <Label text="Create a new account" styleClass="subtitle"/>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox fx:id="formContainer" alignment="CENTER" spacing="15" styleClass="card">
+            <padding>
+                <Insets top="20" right="40" bottom="20" left="40"/>
+            </padding>
+            
+            <Label fx:id="errorLabel" 
+                   styleClass="error-label" 
+                   visible="false"
+                   managed="false"/>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Username:" minWidth="100"/>
+                <TextField fx:id="usernameField" HBox.hgrow="ALWAYS" promptText="Choose a username"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Password:" minWidth="100"/>
+                <PasswordField fx:id="passwordField" HBox.hgrow="ALWAYS" promptText="Create a secure password"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Confirm Password:" minWidth="100"/>
+                <PasswordField fx:id="confirmPasswordField" HBox.hgrow="ALWAYS" promptText="Confirm your password"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Email:" minWidth="100"/>
+                <TextField fx:id="emailField" HBox.hgrow="ALWAYS" promptText="Enter your email address"/>
+            </HBox>
+            
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Full Name:" minWidth="100"/>
+                <TextField fx:id="fullNameField" HBox.hgrow="ALWAYS" promptText="Enter your full name"/>
+            </HBox>
+            
+            <Button fx:id="registerButton" text="Register" onAction="#handleRegister" 
+                    defaultButton="true" maxWidth="Infinity"/>
+            
+            <Separator>
+                <padding>
+                    <Insets top="10" bottom="10"/>
+                </padding>
+            </Separator>
+            
+            <HBox alignment="CENTER">
+                <Label text="Already have an account? "/>
+                <Hyperlink text="Login" onAction="#navigateToLogin"/>
+            </HBox>
+        </VBox>
+    </center>
+    
+    <bottom>
+        <HBox alignment="CENTER" style="-fx-padding: 20;">
+            <Label text=" 2025 Library Management System"/>
+        </HBox>
+    </bottom>
+    
+</BorderPane>

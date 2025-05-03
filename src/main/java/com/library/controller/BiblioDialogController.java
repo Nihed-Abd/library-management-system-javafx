@@ -2,6 +2,7 @@ package com.library.controller;
 
 import com.library.model.Biblio;
 import com.library.service.BiblioService;
+import com.library.service.UserService;
 import com.library.util.DialogUtil;
 import javafx.beans.value.ChangeListener;
 import javafx.fxml.FXML;
@@ -48,6 +49,9 @@ public class BiblioDialogController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Initialize the biblio object
         biblio = new Biblio();
+        
+        // Set current user ID as default owner
+        biblio.setUserId(UserService.getCurrentUserId());
         
         // Add listeners to update preview in real-time
         setupLivePreview();
@@ -134,11 +138,23 @@ public class BiblioDialogController implements Initializable {
         biblio.setLocation(location);
         biblio.setDescription(description);
         
+        // If it's a new biblio, set the current user as owner
+        if (addMode) {
+            biblio.setUserId(UserService.getCurrentUserId());
+        }
+        
         boolean success;
         if (addMode) {
             // Add new biblio
             success = biblioService.addBiblio(biblio);
         } else {
+            // Verify user ownership before updating
+            if (!UserService.isAdmin() && biblio.getUserId() != UserService.getCurrentUserId()) {
+                DialogUtil.showError("Permission Denied", "Cannot Edit", 
+                    "You don't have permission to edit this library.");
+                return;
+            }
+            
             // Update existing biblio
             success = biblioService.updateBiblio(biblio);
         }

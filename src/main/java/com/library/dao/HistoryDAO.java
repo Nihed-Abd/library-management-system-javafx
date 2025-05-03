@@ -1,8 +1,8 @@
 package com.library.dao;
 
-import com.library.model.History;
-import com.library.model.Book;
 import com.library.model.Biblio;
+import com.library.model.Book;
+import com.library.model.History;
 import com.library.util.DatabaseUtil;
 
 import java.sql.*;
@@ -12,101 +12,120 @@ import java.util.List;
 
 public class HistoryDAO {
     
-    private final BookDAO bookDAO = new BookDAO();
-    private final BiblioDAO biblioDAO = new BiblioDAO();
+    private final BookDAO bookDAO;
+    
+    public HistoryDAO() {
+        this.bookDAO = new BookDAO();
+    }
     
     public List<History> getAllHistory() {
+        String sql = "SELECT id, book_id, is_loan, date, note FROM history ORDER BY date DESC";
         List<History> historyList = new ArrayList<>();
-        String query = "SELECT h.*, b.biblio_id FROM history h JOIN book b ON h.book_id = b.id ORDER BY h.date_time DESC";
-
+        
         try (Connection conn = DatabaseUtil.getConnection();
              Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
             while (rs.next()) {
                 History history = mapResultSetToHistory(rs);
+                loadBookForHistory(history);
                 historyList.add(history);
             }
+            
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error getting all history: " + e.getMessage());
         }
-
+        
         return historyList;
     }
     
     public List<History> getHistoryByBookId(int bookId) {
+        String sql = "SELECT id, book_id, is_loan, date, note FROM history WHERE book_id = ? ORDER BY date DESC";
         List<History> historyList = new ArrayList<>();
-        String query = "SELECT h.*, b.biblio_id FROM history h JOIN book b ON h.book_id = b.id WHERE h.book_id = ? ORDER BY h.date_time DESC";
-
+        
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, bookId);
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     History history = mapResultSetToHistory(rs);
+                    loadBookForHistory(history);
                     historyList.add(history);
                 }
             }
+            
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error getting history by book ID: " + e.getMessage());
         }
-
+        
         return historyList;
     }
     
     public List<History> getHistoryByBiblioId(int biblioId) {
+        String sql = "SELECT h.id, h.book_id, h.is_loan, h.date, h.note FROM history h " +
+                     "JOIN book b ON h.book_id = b.id " +
+                     "WHERE b.biblio_id = ? " +
+                     "ORDER BY h.date DESC";
         List<History> historyList = new ArrayList<>();
-        String query = "SELECT h.*, b.biblio_id FROM history h JOIN book b ON h.book_id = b.id WHERE b.biblio_id = ? ORDER BY h.date_time DESC";
-
+        
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, biblioId);
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     History history = mapResultSetToHistory(rs);
+                    loadBookForHistory(history);
                     historyList.add(history);
                 }
             }
+            
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error getting history by biblio ID: " + e.getMessage());
         }
-
+        
         return historyList;
     }
-
+    
     public History getHistoryById(int id) {
-        String query = "SELECT h.*, b.biblio_id FROM history h JOIN book b ON h.book_id = b.id WHERE h.id = ?";
+        String sql = "SELECT id, book_id, is_loan, date, note FROM history WHERE id = ?";
         
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, id);
             
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    return mapResultSetToHistory(rs);
+                    History history = mapResultSetToHistory(rs);
+                    loadBookForHistory(history);
+                    return history;
                 }
             }
+            
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error getting history by ID: " + e.getMessage());
         }
         
         return null;
     }
-
+    
     public boolean addHistory(History history) {
-        String query = "INSERT INTO history (status, book_id, date_time, note) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO history (book_id, is_loan, date, note) VALUES (?, ?, ?, ?)";
         
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
-            pstmt.setString(1, history.getStatus().name());
-            pstmt.setInt(2, history.getBookId());
-            pstmt.setTimestamp(3, Timestamp.valueOf(history.getDateTime()));
+            pstmt.setInt(1, history.getBookId());
+            pstmt.setBoolean(2, history.isLoan());
+            pstmt.setTimestamp(3, Timestamp.valueOf(history.getDate()));
             pstmt.setString(4, history.getNote());
             
             int affectedRows = pstmt.executeUpdate();
@@ -119,66 +138,72 @@ public class HistoryDAO {
                     }
                 }
             }
+            
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error adding history: " + e.getMessage());
         }
         
         return false;
     }
-
+    
     public boolean updateHistory(History history) {
-        String query = "UPDATE history SET status = ?, book_id = ?, date_time = ?, note = ? WHERE id = ?";
+        String sql = "UPDATE history SET book_id = ?, is_loan = ?, date = ?, note = ? WHERE id = ?";
         
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
-            pstmt.setString(1, history.getStatus().name());
-            pstmt.setInt(2, history.getBookId());
-            pstmt.setTimestamp(3, Timestamp.valueOf(history.getDateTime()));
+            pstmt.setInt(1, history.getBookId());
+            pstmt.setBoolean(2, history.isLoan());
+            pstmt.setTimestamp(3, Timestamp.valueOf(history.getDate()));
             pstmt.setString(4, history.getNote());
             pstmt.setInt(5, history.getId());
             
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
+            
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error updating history: " + e.getMessage());
-            return false;
         }
+        
+        return false;
     }
-
+    
     public boolean deleteHistory(int id) {
-        String query = "DELETE FROM history WHERE id = ?";
+        String sql = "DELETE FROM history WHERE id = ?";
         
         try (Connection conn = DatabaseUtil.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
             
             pstmt.setInt(1, id);
             
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
+            
         } catch (SQLException e) {
+            e.printStackTrace();
             System.err.println("Error deleting history: " + e.getMessage());
-            return false;
         }
+        
+        return false;
     }
     
     public boolean recordLoan(int bookId, String note) {
-        // Create a new history record for a loan
         History history = new History();
-        history.setStatus(History.HistoryStatus.LOAN);
         history.setBookId(bookId);
-        history.setDateTime(LocalDateTime.now());
+        history.setLoan(true);
+        history.setDate(LocalDateTime.now());
         history.setNote(note);
         
         return addHistory(history);
     }
     
     public boolean recordReturn(int bookId, String note) {
-        // Create a new history record for a return
         History history = new History();
-        history.setStatus(History.HistoryStatus.RETURN);
         history.setBookId(bookId);
-        history.setDateTime(LocalDateTime.now());
+        history.setLoan(false);
+        history.setDate(LocalDateTime.now());
         history.setNote(note);
         
         return addHistory(history);
@@ -187,20 +212,18 @@ public class HistoryDAO {
     private History mapResultSetToHistory(ResultSet rs) throws SQLException {
         History history = new History();
         history.setId(rs.getInt("id"));
-        history.setStatus(History.HistoryStatus.valueOf(rs.getString("status")));
         history.setBookId(rs.getInt("book_id"));
-        history.setDateTime(rs.getTimestamp("date_time").toLocalDateTime());
+        history.setLoan(rs.getBoolean("is_loan"));
+        history.setDate(rs.getTimestamp("date").toLocalDateTime());
         history.setNote(rs.getString("note"));
-        
-        // Get the associated book object
+        return history;
+    }
+    
+    private void loadBookForHistory(History history) {
         Book book = bookDAO.getBookById(history.getBookId());
         history.setBook(book);
-        
-        // Get the associated biblio object
-        int biblioId = rs.getInt("biblio_id");
-        Biblio biblio = biblioDAO.getBiblioById(biblioId);
-        history.setBiblio(biblio);
-        
-        return history;
+        if (book != null) {
+            history.setBiblio(book.getBiblio());
+        }
     }
 }

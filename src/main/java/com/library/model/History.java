@@ -5,51 +5,31 @@ import java.util.Objects;
 
 public class History {
     private int id;
-    private HistoryStatus status;
+    private boolean isLoan; 
     private int bookId;
-    private LocalDateTime dateTime;
+    private LocalDateTime date; 
     private String note;
     
     // References to related objects (for UI display)
     private Book book;
     private Biblio biblio;
 
-    public enum HistoryStatus {
-        LOAN("Loan"),
-        RETURN("Return");
-        
-        private final String displayName;
-        
-        HistoryStatus(String displayName) {
-            this.displayName = displayName;
-        }
-        
-        public String getDisplayName() {
-            return displayName;
-        }
-        
-        @Override
-        public String toString() {
-            return displayName;
-        }
-    }
-
     public History() {
-        this.dateTime = LocalDateTime.now();
+        this.date = LocalDateTime.now();
     }
 
-    public History(int id, HistoryStatus status, int bookId, LocalDateTime dateTime, String note) {
+    public History(int id, boolean isLoan, int bookId, LocalDateTime date, String note) {
         this.id = id;
-        this.status = status;
+        this.isLoan = isLoan;
         this.bookId = bookId;
-        this.dateTime = dateTime;
+        this.date = date;
         this.note = note;
     }
 
-    public History(HistoryStatus status, int bookId, String note) {
-        this.status = status;
+    public History(boolean isLoan, int bookId, String note) {
+        this.isLoan = isLoan;
         this.bookId = bookId;
-        this.dateTime = LocalDateTime.now();
+        this.date = LocalDateTime.now();
         this.note = note;
     }
 
@@ -61,12 +41,12 @@ public class History {
         this.id = id;
     }
 
-    public HistoryStatus getStatus() {
-        return status;
+    public boolean isLoan() {
+        return isLoan;
     }
 
-    public void setStatus(HistoryStatus status) {
-        this.status = status;
+    public void setLoan(boolean loan) {
+        isLoan = loan;
     }
 
     public int getBookId() {
@@ -77,12 +57,21 @@ public class History {
         this.bookId = bookId;
     }
 
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
+    }
+
+    // Keep these for backward compatibility
     public LocalDateTime getDateTime() {
-        return dateTime;
+        return getDate();
     }
 
     public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+        setDate(dateTime);
     }
 
     public String getNote() {

@@ -15,15 +15,15 @@ public class LibraryApp extends Application {
         // Initialize the database
         DatabaseUtil.initializeDatabase();
         
-        // Load the main view
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/library/view/MainView.fxml"));
+        // Load the login view instead of the main view
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/library/view/LoginView.fxml"));
         Parent root = loader.load();
         
         // Set up the primary stage
-        Scene scene = new Scene(root, 1000, 700);
+        Scene scene = new Scene(root, 600, 400);
         scene.getStylesheets().add(getClass().getResource("/com/library/css/styles.css").toExternalForm());
         
-        primaryStage.setTitle("Library Management System");
+        primaryStage.setTitle("Login - Library Management System");
         primaryStage.setScene(scene);
         
         // Set application icon (optional)
@@ -33,8 +33,8 @@ public class LibraryApp extends Application {
             System.err.println("Could not load application icon: " + e.getMessage());
         }
         
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(600);
+        primaryStage.setMinHeight(400);
         primaryStage.show();
     }
 

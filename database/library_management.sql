@@ -4,75 +4,91 @@ CREATE DATABASE IF NOT EXISTS library_management;
 -- Use the database
 USE library_management;
 
--- Create User table
-CREATE TABLE IF NOT EXISTS user (
+-- Drop tables if they exist to avoid conflicts
+DROP TABLE IF EXISTS history;
+DROP TABLE IF EXISTS book;
+DROP TABLE IF EXISTS biblio;
+DROP TABLE IF EXISTS user;
+
+-- Create user table
+CREATE TABLE user (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,  -- Increased length to accommodate hash
     email VARCHAR(100) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
     is_admin BOOLEAN DEFAULT FALSE,
     date_created DATE NOT NULL
 );
 
--- Create Biblio table
-CREATE TABLE IF NOT EXISTS biblio (
+-- Create biblio table with foreign key to user
+CREATE TABLE biblio (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    location VARCHAR(255) NOT NULL,
-    date_creation DATE NOT NULL,
-    name VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    location VARCHAR(200),
     description TEXT,
+    date_creation DATE NOT NULL,
     user_id INT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
--- Create Book table
-CREATE TABLE IF NOT EXISTS book (
+-- Create book table
+CREATE TABLE book (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    biblio_id INT NOT NULL,
-    is_available BOOLEAN DEFAULT TRUE,
-    title VARCHAR(255) NOT NULL,
-    author VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(100),
+    price DOUBLE,
     description TEXT,
-    price DOUBLE NOT NULL,
+    available BOOLEAN DEFAULT TRUE,
     date_creation DATE NOT NULL,
+    biblio_id INT NOT NULL,
     FOREIGN KEY (biblio_id) REFERENCES biblio(id) ON DELETE CASCADE
 );
 
--- Create History table
-CREATE TABLE IF NOT EXISTS history (
+-- Create history table
+CREATE TABLE history (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    status ENUM('LOAN', 'RETURN') NOT NULL,
     book_id INT NOT NULL,
-    date_time DATETIME NOT NULL,
+    is_loan BOOLEAN NOT NULL,
+    date TIMESTAMP NOT NULL,
     note TEXT,
     FOREIGN KEY (book_id) REFERENCES book(id) ON DELETE CASCADE
 );
 
--- Insert sample data (optional)
-INSERT INTO user (username, password, email, full_name, is_admin, date_created) VALUES
-('admin', 'admin123', 'admin@library.com', 'System Administrator', TRUE, '2025-01-01'),
-('john', 'john123', 'john@example.com', 'John Doe', FALSE, '2025-01-15'),
-('mary', 'mary123', 'mary@example.com', 'Mary Smith', FALSE, '2025-02-10');
+-- Insert default users (with SHA-256 hashed passwords)
+-- Password "admin123" hashed: "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
+-- Password "user123" hashed: "6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090"
+INSERT INTO user (username, password, email, full_name, is_admin, date_created) VALUES 
+('admin', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9', 'admin@library.com', 'Administrator', TRUE, CURDATE()),
+('john', '6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090', 'john@example.com', 'John Smith', FALSE, CURDATE()),
+('mary', '6ca13d52ca70c883e0f0bb101e425a89e8624de51db2d2392593af6a84118090', 'mary@example.com', 'Mary Johnson', FALSE, CURDATE());
 
-INSERT INTO biblio (location, date_creation, name, description, user_id) VALUES
-('Main Floor', '2025-01-15', 'Science Library', 'Collection of scientific books and journals', 1),
-('Second Floor', '2025-02-20', 'Fiction Library', 'Collection of fiction and literature books', 1),
-('Basement', '2025-03-10', 'Reference Library', 'Collection of reference materials and encyclopedias', 1),
-('Home Office', '2025-03-15', 'John\'s Personal Library', 'My personal collection of tech books', 2),
-('Living Room', '2025-03-20', 'Mary\'s Reading Collection', 'Fiction and self-improvement books', 3);
+-- Insert sample data for biblios with user ownership
+INSERT INTO biblio (name, location, description, date_creation, user_id) VALUES 
+('Main Library', 'Floor 1, Building A', 'The main library containing all genres', CURDATE(), 1),
+('Science Library', 'Floor 2, Building B', 'Library dedicated to science books', CURDATE(), 2),
+('Fiction Collection', 'Floor 1, Building C', 'Collection of fiction books', CURDATE(), 3),
+('History Archives', 'Floor 3, Building A', 'Historical books and documents', CURDATE(), 2);
 
-INSERT INTO book (name, biblio_id, is_available, title, author, description, price, date_creation) VALUES
-('SCI-001', 1, TRUE, 'Introduction to Physics', 'Albert Einstein', 'Basic physics textbook', 29.99, '2025-01-20'),
-('SCI-002', 1, TRUE, 'Organic Chemistry', 'Marie Curie', 'Advanced chemistry book', 39.99, '2025-01-25'),
-('FIC-001', 2, TRUE, 'The Great Novel', 'Jane Austen', 'Classic literature book', 19.99, '2025-02-25'),
-('FIC-002', 2, FALSE, 'Modern Poetry', 'Robert Frost', 'Collection of modern poems', 15.99, '2025-02-27'),
-('REF-001', 3, TRUE, 'Encyclopedia of Knowledge', 'Various Authors', 'Comprehensive reference book', 59.99, '2025-03-15'),
-('TECH-001', 4, TRUE, 'Java Programming', 'James Gosling', 'Complete guide to Java', 45.99, '2025-03-16'),
-('TECH-002', 4, TRUE, 'Python for Beginners', 'Guido van Rossum', 'Learn Python programming', 35.99, '2025-03-17'),
-('FIC-003', 5, TRUE, 'Pride and Prejudice', 'Jane Austen', 'Classic romance novel', 12.99, '2025-03-21');
+-- Insert sample data for books
+INSERT INTO book (name, title, author, price, description, available, date_creation, biblio_id) VALUES 
+('SCI001', 'Physics Fundamentals', 'Richard Feynman', 29.99, 'Introduction to physics concepts', TRUE, CURDATE(), 2),
+('FIC001', 'The Great Adventure', 'John Doe', 19.99, 'An epic adventure novel', TRUE, CURDATE(), 3),
+('HIST001', 'World War II Chronicles', 'History Group', 39.99, 'Detailed account of WWII', TRUE, CURDATE(), 4),
+('SCI002', 'Chemistry Basics', 'Marie Curie', 24.99, 'Introduction to chemistry', FALSE, CURDATE(), 2),
+('FIC002', 'Mystery at Midnight', 'Agatha Smith', 15.99, 'A thrilling mystery novel', TRUE, CURDATE(), 3),
+('MAIN001', 'Library Guidebook', 'Admin Team', 9.99, 'Guide to using the library', TRUE, CURDATE(), 1);
 
-INSERT INTO history (status, book_id, date_time, note) VALUES
-('LOAN', 4, '2025-04-15 10:30:00', 'Borrowed by Student #1234'),
-('RETURN', 4, '2025-04-20 14:45:00', 'Returned with minor damage');
+-- Insert sample data for history
+INSERT INTO history (book_id, is_loan, date, note) VALUES 
+(4, TRUE, DATE_SUB(NOW(), INTERVAL 5 DAY), 'Borrowed for research project'),
+(4, FALSE, NOW(), 'Returned with minor damage on page 42'),
+(2, TRUE, DATE_SUB(NOW(), INTERVAL 10 DAY), 'Borrowed for summer reading'),
+(2, FALSE, DATE_SUB(NOW(), INTERVAL 3 DAY), 'Returned in good condition'),
+(5, TRUE, DATE_SUB(NOW(), INTERVAL 2 DAY), 'Borrowed for weekend reading');
+
+-- Add additional indexes for performance
+CREATE INDEX idx_book_biblio ON book(biblio_id);
+CREATE INDEX idx_history_book ON history(book_id);
+CREATE INDEX idx_biblio_user ON biblio(user_id);

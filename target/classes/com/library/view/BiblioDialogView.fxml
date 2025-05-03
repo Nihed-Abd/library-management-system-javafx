@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.library.controller.BiblioDialogController"
+          vgap="10" hgap="10" styleClass="dialog-pane">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+    
+    <columnConstraints>
+        <ColumnConstraints minWidth="100" prefWidth="120" />
+        <ColumnConstraints minWidth="200" prefWidth="300" />
+    </columnConstraints>
+    
+    <!-- Library Name -->
+    <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+    <TextField fx:id="nameField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+    
+    <!-- Location -->
+    <Label text="Location:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+    <TextField fx:id="locationField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+    
+    <!-- Description -->
+    <Label text="Description:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+    <TextArea fx:id="descriptionArea" GridPane.rowIndex="2" GridPane.columnIndex="1" 
+              prefRowCount="4" wrapText="true" />
+    
+    <!-- Preview section -->
+    <VBox spacing="10" GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2" 
+          styleClass="card">
+        <Label text="Preview" styleClass="subtitle" />
+        <HBox spacing="5">
+            <Label text="Name:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewName" />
+        </HBox>
+        <HBox spacing="5">
+            <Label text="Location:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewLocation" />
+        </HBox>
+        <HBox spacing="5">
+            <Label text="Description:" style="-fx-font-weight: bold" />
+            <Label fx:id="previewDescription" wrapText="true" />
+        </HBox>
+    </VBox>
+    
+    <!-- Buttons -->
+    <HBox spacing="10" alignment="CENTER_RIGHT" 
+          GridPane.rowIndex="4" GridPane.columnIndex="0" GridPane.columnSpan="2">
+        <Button fx:id="saveButton" text="Save" onAction="#handleSave" defaultButton="true" />
+        <Button text="Cancel" onAction="#handleCancel" cancelButton="true" />
+    </HBox>
+    
+</GridPane>
