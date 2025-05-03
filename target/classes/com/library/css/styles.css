@@ -645,3 +645,35 @@
     -fx-background-color: #e8f5fe;
     background-color: #e8f5fe;
 }
+
+/* Specific styling for history table */
+.history-table .table-row-cell {
+    -fx-padding: 12px 0;
+    -fx-pref-height: 40px;
+    -fx-min-height: 40px;
+    padding: 12px 0;
+    min-height: 40px;
+}
+
+.history-table .table-cell {
+    -fx-padding: 12px 8px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 13px;
+    padding: 12px 8px;
+    text-align: left;
+    font-size: 13px;
+}
+
+.history-table .column-header {
+    -fx-font-size: 14px;
+    -fx-padding: 14px 8px;
+    font-size: 14px;
+    padding: 14px 8px;
+}
+
+/* For all tables, ensure text wrapping for better readability */
+.table-cell {
+    -fx-wrap-text: true;
+    white-space: normal;
+    word-wrap: break-word;
+}
